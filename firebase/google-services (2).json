@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "107771029649",
+    "project_id": "mini-food-odering",
+    "storage_bucket": "mini-food-odering.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107771029649:android:24e39873dfd383831df730",
+        "android_client_info": {
+          "package_name": "com.charchil.ThinkFood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107771029649-45goqs2dkjo09h5bbo9ovlsqvmug3dcj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmWN11bKhb_gPg6-WLONATeK2XgCJZ1DI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107771029649-45goqs2dkjo09h5bbo9ovlsqvmug3dcj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
