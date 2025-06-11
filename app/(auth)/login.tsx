@@ -7,15 +7,15 @@ import * as WebBrowser from 'expo-web-browser';
 import { ChefHat, Coffee, Eye, EyeOff, Heart, Lock, Mail, Utensils } from 'lucide-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    ActivityIndicator,
-    Animated,
-    Dimensions,
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();

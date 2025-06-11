@@ -1,23 +1,35 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { CreditCard, FileText, CircleHelp as HelpCircle, Info, LogOut, MapPin, Moon, Settings, Sun, User } from 'lucide-react-native';
-import React from 'react';
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { CreditCard, FileText, CircleHelp as HelpCircle, LogOut, MapPin, Settings, User } from 'lucide-react-native';
+import React, { useEffect, useRef } from 'react';
+import { Alert, Animated, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
   const { user, userProfile, logout } = useAuth();
   const { isDark, toggleTheme, colors } = useTheme();
   const router = useRouter();
+
+  // Animation values for menu items
+  const menuAnimations = useRef(
+    Array(6).fill(0).map(() => new Animated.Value(0))
+  ).current;
+
+  useEffect(() => {
+    // Animate menu items sequentially
+    Animated.stagger(
+      100,
+      menuAnimations.map(anim =>
+        Animated.spring(anim, {
+          toValue: 1,
+          friction: 8,
+          tension: 40,
+          useNativeDriver: true,
+        })
+      )
+    ).start();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -69,13 +81,19 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>Profile</Text>
-        </View>
+    <ScrollView 
+      style={[styles.container, { backgroundColor: colors.background }]}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: colors.text }]}>Profile</Text>
+      </View>
 
-        <View style={[styles.profileSection, { backgroundColor: colors.card }]}>
+      <View style={[styles.profileSection, { backgroundColor: colors.card }]}>
+        <LinearGradient
+          colors={[colors.primary, colors.card]}
+          style={styles.profileGradient}
+        >
           <View style={styles.avatarContainer}>
             {userProfile?.picture ? (
               <Image
@@ -96,104 +114,104 @@ export default function ProfileScreen() {
           <Text style={[styles.email, { color: colors.textSecondary }]}>
             {user?.email || 'No email available'}
           </Text>
-        </View>
+        </LinearGradient>
+      </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Account</Text>
-          
-          {menuItems.slice(0, 3).map((item, index) => {
-            const IconComponent = item.icon;
-            return (
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Account</Text>
+        
+        {menuItems.slice(0, 3).map((item, index) => {
+          const IconComponent = item.icon;
+          return (
+            <Animated.View
+              key={index}
+              style={{
+                opacity: menuAnimations[index],
+                transform: [
+                  {
+                    translateY: menuAnimations[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [20, 0],
+                    }),
+                  },
+                ],
+              }}
+            >
               <TouchableOpacity 
-                key={index} 
                 style={[styles.menuItem, { backgroundColor: colors.card }]} 
                 onPress={item.onPress}
               >
                 <View style={styles.menuItemContent}>
                   <View style={styles.menuItemLeft}>
-                    <View style={[styles.menuItemIcon, { backgroundColor: colors.gray[100] }]}>
+                    <View style={[styles.menuItemIcon, { backgroundColor: colors.primary + '20' }]}>
                       <IconComponent size={20} color={colors.primary} />
                     </View>
                     <View style={styles.menuItemText}>
                       <Text style={[styles.menuItemTitle, { color: colors.text }]}>{item.title}</Text>
-                      <Text style={[styles.menuItemSubtitle, { color: colors.gray[600] }]}>{item.subtitle}</Text>
+                      <Text style={[styles.menuItemSubtitle, { color: colors.textSecondary }]}>{item.subtitle}</Text>
                     </View>
                   </View>
                 </View>
               </TouchableOpacity>
-            );
-          })}
-        </View>
+            </Animated.View>
+          );
+        })}
+      </View>
 
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Support</Text>
-          
-          {menuItems.slice(3).map((item, index) => {
-            const IconComponent = item.icon;
-            return (
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Support</Text>
+        
+        {menuItems.slice(3).map((item, index) => {
+          const IconComponent = item.icon;
+          return (
+            <Animated.View
+              key={index}
+              style={{
+                opacity: menuAnimations[index + 3],
+                transform: [
+                  {
+                    translateY: menuAnimations[index + 3].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [20, 0],
+                    }),
+                  },
+                ],
+              }}
+            >
               <TouchableOpacity 
-                key={index} 
                 style={[styles.menuItem, { backgroundColor: colors.card }]} 
                 onPress={item.onPress}
               >
                 <View style={styles.menuItemContent}>
                   <View style={styles.menuItemLeft}>
-                    <View style={[styles.menuItemIcon, { backgroundColor: colors.gray[100] }]}>
+                    <View style={[styles.menuItemIcon, { backgroundColor: colors.primary + '20' }]}>
                       <IconComponent size={20} color={colors.primary} />
                     </View>
                     <View style={styles.menuItemText}>
                       <Text style={[styles.menuItemTitle, { color: colors.text }]}>{item.title}</Text>
-                      <Text style={[styles.menuItemSubtitle, { color: colors.gray[600] }]}>{item.subtitle}</Text>
+                      <Text style={[styles.menuItemSubtitle, { color: colors.textSecondary }]}>{item.subtitle}</Text>
                     </View>
                   </View>
                 </View>
               </TouchableOpacity>
-            );
-          })}
-        </View>
+            </Animated.View>
+          );
+        })}
+      </View>
 
-        <TouchableOpacity
-          style={[styles.menuItem, { borderBottomColor: colors.border }]}
-          onPress={toggleTheme}
-        >
-          <View style={styles.menuItemLeft}>
-            {isDark ? (
-              <Sun size={24} color={colors.text} />
-            ) : (
-              <Moon size={24} color={colors.text} />
-            )}
-            <Text style={[styles.menuItemText, { color: colors.text }]}>
-              {isDark ? 'Light Mode' : 'Dark Mode'}
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <View style={[styles.menuItem, { borderBottomColor: colors.border }]}>
-          <View style={styles.menuItemLeft}>
-            <Info size={24} color={colors.text} />
-            <Text style={[styles.menuItemText, { color: colors.text }]}>
-              Version 1.0
-            </Text>
-          </View>
-        </View>
-
-        <TouchableOpacity 
-          style={[styles.logoutButton, { backgroundColor: colors.card }]} 
-          onPress={handleLogout}
-        >
-          <LogOut size={20} color={colors.error} />
-          <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+      <TouchableOpacity 
+        style={[styles.logoutButton, { backgroundColor: colors.card }]} 
+        onPress={handleLogout}
+      >
+        <LogOut size={20} color={colors.error} />
+        <Text style={[styles.logoutText, { color: colors.error }]}>Logout</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  scrollView: {
     flex: 1,
   },
   header: {
@@ -205,8 +223,11 @@ const styles = StyleSheet.create({
   },
   profileSection: {
     margin: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  profileGradient: {
     padding: 20,
-    borderRadius: 12,
     alignItems: 'center',
   },
   avatarContainer: {
@@ -216,6 +237,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
+    borderWidth: 3,
+    borderColor: 'white',
   },
   avatarPlaceholder: {
     width: 100,
@@ -223,6 +246,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 3,
+    borderColor: 'white',
   },
   avatarText: {
     fontSize: 40,
@@ -247,20 +272,17 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 16,
   },
   menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
   },
   menuItemIcon: {
     width: 40,
@@ -287,8 +309,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 16,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#fecaca',
     marginHorizontal: 16,
     marginBottom: 20,
     gap: 8,

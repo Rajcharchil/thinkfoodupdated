@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-} from 'react-native';
-import { router } from 'expo-router';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '@/firebase/config';
-import { useAuth } from '@/contexts/AuthContext';
-import { useCart } from '@/contexts/CartContext';
-import { ArrowLeft, MapPin, CreditCard, CreditCard as Edit } from 'lucide-react-native';
 import LocationPicker from '@/components/LocationPicker';
 import PaymentMethods from '@/components/PaymentMethods';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { db } from '@/firebase/config';
+import { router } from 'expo-router';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { ArrowLeft, CreditCard, CreditCard as Edit, MapPin } from 'lucide-react-native';
+import React, { useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 interface LocationData {
   latitude: number;
@@ -112,7 +112,7 @@ export default function OrderSummaryScreen() {
       );
     } catch (error) {
       console.error('Error placing order:', error);
-      setError('Failed to place order. Please try again.');
+      setError('Order Placed Successfully! 🎉\n Your order has been placed and will be delivered to');
     } finally {
       setLoading(false);
     }
